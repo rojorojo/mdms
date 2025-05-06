@@ -1,7 +1,23 @@
 import { Input } from "@/components/ui/input";
 import React from "react";
 
-export const StartDateSection = () => {
+interface StartDateSectionProps {
+  value?: {
+    startDate?: string;
+    productDescription?: string;
+    receiptDescription?: string;
+  };
+  onChange?: (value: {
+    startDate?: string;
+    productDescription?: string;
+    receiptDescription?: string;
+  }) => void;
+}
+
+export const StartDateSection: React.FC<StartDateSectionProps> = ({
+  value,
+  onChange,
+}) => {
   return (
     <div className="bg-[#F5F5F5] p-6 w-full">
       <h2 className="text-xl font-medium text-black mb-6">
@@ -17,7 +33,11 @@ export const StartDateSection = () => {
           <div className="relative w-full">
             <Input
               type="text"
-              placeholder="Enter text"
+              value={value?.startDate || ""}
+              onChange={(e) =>
+                onChange?.({ ...value, startDate: e.target.value })
+              }
+              placeholder="Enter start date"
               className="w-full px-3 py-2 border border-black bg-white text-sm focus:outline-none"
             />
           </div>
@@ -31,7 +51,11 @@ export const StartDateSection = () => {
           <div className="relative w-full">
             <Input
               type="text"
-              placeholder="Enter text"
+              value={value?.productDescription}
+              onChange={(e) =>
+                onChange?.({ ...value, productDescription: e.target.value })
+              }
+              placeholder="Enter product description"
               className="w-full px-3 py-2 border border-black bg-white text-sm focus:outline-none"
             />
           </div>
@@ -45,7 +69,11 @@ export const StartDateSection = () => {
           <div className="relative w-full">
             <Input
               type="text"
-              placeholder="Enter text"
+              value={value?.receiptDescription}
+              onChange={(e) =>
+                onChange?.({ ...value, receiptDescription: e.target.value })
+              }
+              placeholder="Enter receipt description"
               className="w-full px-3 py-2 border border-black bg-white text-sm focus:outline-none"
             />
           </div>

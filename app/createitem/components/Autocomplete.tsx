@@ -1,3 +1,5 @@
+"use client";
+
 import {
   CommandGroup,
   CommandItem,
@@ -5,7 +7,13 @@ import {
   CommandInput,
 } from "@/components/ui/command";
 import { Command as CommandPrimitive } from "cmdk";
-import { useState, useRef, useCallback, type KeyboardEvent } from "react";
+import {
+  useState,
+  useRef,
+  useCallback,
+  type KeyboardEvent,
+  useEffect,
+} from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -40,6 +48,15 @@ export const AutoComplete = ({
   const [isOpen, setOpen] = useState(false);
   const [selected, setSelected] = useState<Option>(value as Option);
   const [inputValue, setInputValue] = useState<string>(value?.label || "");
+  const [isFocused, setIsFocused] = useState(false);
+  const [shouldFilterOptions, setShouldFilterOptions] = useState(false);
+
+  useEffect(() => {
+    if (value) {
+      setSelected(value);
+      setInputValue(value.label || "");
+    }
+  }, [value]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -73,7 +90,15 @@ export const AutoComplete = ({
 
   const handleBlur = useCallback(() => {
     setOpen(false);
-    setInputValue(selected?.label);
+    setInputValue(selected?.label || "");
+  }, [selected]);
+
+  const handleFocus = useCallback(() => {
+    setOpen(true);
+    setShouldFilterOptions(false); // Show all options when focused
+    if (selected?.label) {
+      setInputValue(selected.label);
+    }
   }, [selected]);
 
   const handleSelectOption = useCallback(
@@ -85,12 +110,29 @@ export const AutoComplete = ({
 
       // This is a hack to prevent the input from being focused after the user selects an option
       // We can call this hack: "The next tick"
-      setTimeout(() => {
+      {
+        /*setTimeout(() => {
         inputRef?.current?.blur();
-      }, 0);
+      }, 0);*/
+      }
     },
     [onValueChange]
   );
+
+  // Update the input handling
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
+    setShouldFilterOptions(true); // Only filter when user is typing
+  };
+
+  // In the render section, determine which options to display
+  // Use either all options or filtered options based on shouldFilterOptions
+  const displayOptions =
+    shouldFilterOptions && inputValue !== ""
+      ? options.filter((option) =>
+          option.label.toLowerCase().includes(inputValue.toLowerCase())
+        )
+      : options;
 
   return (
     <CommandPrimitive onKeyDown={handleKeyDown}>
@@ -99,9 +141,9 @@ export const AutoComplete = ({
           asChild
           ref={inputRef}
           value={inputValue}
-          onValueChange={isLoading ? undefined : setInputValue}
+          onValueChange={isLoading ? undefined : handleInputChange}
           onBlur={handleBlur}
-          onFocus={() => setOpen(true)}
+          onFocus={handleFocus}
           placeholder={placeholder}
           disabled={disabled}
           className="text-base"
@@ -128,9 +170,9 @@ export const AutoComplete = ({
                 </div>
               </CommandPrimitive.Loading>
             ) : null}
-            {options.length > 0 && !isLoading ? (
+            {displayOptions.length > 0 && !isLoading ? (
               <CommandGroup>
-                {options.map((option) => {
+                {displayOptions.map((option) => {
                   const isSelected = selected?.value === option.value;
                   return (
                     <CommandItem
@@ -143,7 +185,7 @@ export const AutoComplete = ({
                       onSelect={() => handleSelectOption(option)}
                       className={cn(
                         "flex w-full items-center gap-2",
-                        !isSelected ? "pl-8" : null
+                        isSelected ? "bg-neutral-100" : "pl-8"
                       )}
                     >
                       {isSelected ? <Check className="w-4" /> : null}

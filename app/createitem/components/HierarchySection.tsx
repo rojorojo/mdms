@@ -6,6 +6,10 @@ import { AutoComplete, type Option } from "./Autocomplete";
 const psaOptions = [
   { value: "psa-1", label: "PSA 1" },
   { value: "psa-2", label: "PSA 2" },
+  { value: "psa-3", label: "PSA 3" },
+  { value: "psa-4", label: "PSA 4" },
+  { value: "psa-5", label: "PSA 5" },
+  { value: "psa-6", label: "PSA 6" },
 ];
 
 const categoryOptions = [
@@ -23,15 +27,28 @@ const vClassOptions = [
   { value: "v-class-2", label: "V Class 2" },
 ];
 
-export const HierarchySection: React.FC = () => {
-  const [psa, setPsa] = React.useState<Option | null>(null);
-  const [category, setCategory] = React.useState<Option | null>(null);
-  const [subCategory, setSubCategory] = React.useState<Option | null>(null);
-  const [vClass, setVClass] = React.useState<Option | null>(null);
+interface HierarchySectionProps {
+  value?: {
+    psa: string;
+    category: string;
+    subCategory: string;
+    vClass: string;
+  };
+  onChange?: (value: {
+    psa?: string;
+    category?: string;
+    subCategory?: string;
+    vClass?: string;
+  }) => void;
+}
 
+export const HierarchySection: React.FC<HierarchySectionProps> = ({
+  value,
+  onChange,
+}) => {
   return (
     <div className="bg-[#f5f5f5] p-6 w-full">
-      <h2 className="text-2xl font-medium text-black mb-6">Hierarchy</h2>
+      <h2 className="text-xl font-medium text-black mb-6">Hierarchy</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <div className="flex flex-col gap-2">
@@ -41,9 +58,11 @@ export const HierarchySection: React.FC = () => {
           <AutoComplete
             options={psaOptions}
             placeholder="Choose an item"
-            value={psa || undefined}
+            value={psaOptions.find((option) => option.value === value?.psa)}
             emptyMessage="No results."
-            onValueChange={setPsa}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, psa: newValue.value })
+            }
           />
         </div>
 
@@ -57,9 +76,13 @@ export const HierarchySection: React.FC = () => {
           <AutoComplete
             options={categoryOptions}
             placeholder="Choose an item"
-            value={category || undefined}
+            value={categoryOptions.find(
+              (option) => option.value === value?.category
+            )}
             emptyMessage="No results."
-            onValueChange={setCategory}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, category: newValue.value })
+            }
           />
         </div>
 
@@ -73,9 +96,13 @@ export const HierarchySection: React.FC = () => {
           <AutoComplete
             options={subCategoryOptions}
             placeholder="Choose an item"
-            value={subCategory || undefined}
+            value={subCategoryOptions.find(
+              (option) => option.value === value?.subCategory
+            )}
             emptyMessage="No results."
-            onValueChange={setSubCategory}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, subCategory: newValue.value })
+            }
           />
         </div>
 
@@ -89,9 +116,13 @@ export const HierarchySection: React.FC = () => {
           <AutoComplete
             options={vClassOptions}
             placeholder="Choose an item"
-            value={vClass || undefined}
+            value={vClassOptions.find(
+              (option) => option.value === value?.vClass
+            )}
             emptyMessage="No results."
-            onValueChange={setVClass}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, vClass: newValue.value })
+            }
           />
         </div>
       </div>

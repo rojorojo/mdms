@@ -12,35 +12,51 @@ const upcOptions = [
 ];
 
 interface UPCSectionProps {
-  className?: string;
+  value?: string[];
+  onChange?: (value: string[]) => void;
 }
 
-export const UPCSection: React.FC<UPCSectionProps> = ({ className }) => {
+export const UPCSection: React.FC<UPCSectionProps> = ({ value, onChange }) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState<Option | null>(null);
+  const [source, setSource] = React.useState<Option | null>(null);
   const [inputValue, setInputValue] = React.useState("");
   const [pills, setPills] = React.useState<string[]>([]);
   const [isLoading, setLoading] = React.useState(false);
   const [isDisabled, setDisbled] = React.useState(false);
 
   const handleApply = () => {
-    if (value && inputValue) {
-      const newPill = `${value.value}-${inputValue}`;
-      setPills((prev) => [...prev, newPill]);
-      setValue(null);
+    if (source && inputValue) {
+      const newPill = `${source.value}-${inputValue}`;
+      const updatedUpcs = [...(value || []), newPill];
+      setPills(updatedUpcs);
+
       setInputValue("");
+      onChange?.(updatedUpcs);
     }
   };
 
   const handleRemovePill = (pill: string) => {
-    setPills((prev) => prev.filter((p) => p !== pill));
+    const updatedUpcs = (value || []).filter((p) => p !== pill);
+    onChange?.(updatedUpcs);
+  };
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleApply();
+    }
+  };
+  const handleFocus = () => {
+    setOpen(true);
+  };
+  const handleBlur = () => {
+    setOpen(false);
   };
 
   return (
-    <div className={`bg-[#f5f5f5] p-6 w-full ${className}`}>
-      <h2 className="text-2xl font-medium text-black mb-6">UPC</h2>
+    <div className="bg-[#f5f5f5] p-6 w-full">
+      <h2 className="text-xl font-medium text-black mb-6">UPC</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-4 mb-4">
+      <div className="flex gap-4 mb-4">
         <div className="flex flex-col gap-2">
           <label
             htmlFor="upc-type"
@@ -53,8 +69,8 @@ export const UPCSection: React.FC<UPCSectionProps> = ({ className }) => {
             emptyMessage="No results."
             placeholder="Find something"
             isLoading={isLoading}
-            onValueChange={(option) => setValue(option)}
-            value={value || undefined}
+            onValueChange={(option) => setSource(option)}
+            value={source || undefined}
             disabled={isDisabled}
           />
         </div>
@@ -66,29 +82,28 @@ export const UPCSection: React.FC<UPCSectionProps> = ({ className }) => {
           >
             Value
           </label>
-          <Input
-            id="upc-value"
-            type="text"
-            placeholder="Enter text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="w-full border border-black bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-black"
-          />
-        </div>
-
-        <div className="flex items-end">
-          <button
-            onClick={handleApply}
-            disabled={!value || !inputValue}
-            className="bg-[#4a4a4a] text-white px-6 py-2 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-black disabled:opacity-50"
-          >
-            Apply
-          </button>
+          <div className="flex items-center gap-2">
+            <Input
+              id="upc-value"
+              type="text"
+              placeholder="Enter text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="w-full border border-black bg-white px-4 py-2 text-base focus:outline-none focus:ring-1 focus:ring-black"
+            />
+            <button
+              onClick={handleApply}
+              disabled={!value || !inputValue}
+              className="bg-[#4a4a4a] text-white px-6 py-2 text-sm font-medium focus:outline-none focus:ring-1 focus:ring-black disabled:opacity-50"
+            >
+              Apply
+            </button>
+          </div>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {pills.map((pill) => (
+        {(value || []).map((pill) => (
           <Pill
             key={pill}
             value={pill}

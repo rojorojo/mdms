@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { AutoComplete, type Option } from "./Autocomplete";
 import { Input } from "@/components/ui/input";
+import { on } from "events";
 
 const manufacturerCodeOptions = [
   { value: "M0001", label: "M0001 - Anheuser-Busch InBev" },
@@ -27,7 +28,33 @@ const privateBrandOptions = [
   { value: "no", label: "No" },
 ];
 
-export const ValuesSection: React.FC = () => {
+interface ValuesSectionProps {
+  value?: {
+    manufacturerCode?: string;
+    itemType?: string;
+    privateBrand?: string;
+    manufacturerCaseQuantity?: string;
+    licenseSystemItemID?: string;
+    franchiseeSystemName?: string;
+    nutritionSystemItemID?: string;
+    ipq?: string;
+  };
+  onChange?: (value: {
+    manufacturerCode?: string;
+    itemType?: string;
+    privateBrand?: string;
+    manufacturerCaseQuantity?: string;
+    licenseSystemItemID?: string;
+    franchiseeSystemName?: string;
+    nutritionSystemItemID?: string;
+    ipq?: string;
+  }) => void;
+}
+
+export const ValuesSection: React.FC<ValuesSectionProps> = ({
+  value,
+  onChange,
+}) => {
   const [manufacturerCode, setManufacturerCode] = useState<Option | null>(null);
   const [itemType, setItemType] = useState<Option | null>(null);
   const [privateBrand, setPrivateBrand] = useState<Option | null>(null);
@@ -41,7 +68,7 @@ export const ValuesSection: React.FC = () => {
 
   return (
     <div className="bg-[#f5f5f5] p-6 w-full">
-      <h2 className="text-2xl font-medium text-black mb-6">Values</h2>
+      <h2 className="text-xl font-medium text-black mb-6">Values</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="flex flex-col gap-2">
@@ -54,9 +81,13 @@ export const ValuesSection: React.FC = () => {
           <AutoComplete
             options={manufacturerCodeOptions}
             placeholder="Choose an item"
-            value={manufacturerCode || undefined}
+            value={manufacturerCodeOptions.find(
+              (option) => option.value === manufacturerCode?.value
+            )}
             emptyMessage="No results."
-            onValueChange={setManufacturerCode}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, manufacturerCode: newValue.value })
+            }
           />
         </div>
 
@@ -71,8 +102,10 @@ export const ValuesSection: React.FC = () => {
             id="manufacturer-case-quantity"
             type="text"
             placeholder="Enter text"
-            value={manufacturerCaseQuantity}
-            onChange={(e) => setManufacturerCaseQuantity(e.target.value)}
+            value={value?.manufacturerCaseQuantity}
+            onChange={(e) =>
+              onChange?.({ ...value, manufacturerCaseQuantity: e.target.value })
+            }
           />
         </div>
 
@@ -87,8 +120,10 @@ export const ValuesSection: React.FC = () => {
             id="license-system-item-id"
             type="text"
             placeholder="Enter text"
-            value={licenseSystemItemID}
-            onChange={(e) => setLicenseSystemItemID(e.target.value)}
+            value={value?.licenseSystemItemID}
+            onChange={(e) =>
+              onChange?.({ ...value, licenseSystemItemID: e.target.value })
+            }
           />
         </div>
 
@@ -102,9 +137,13 @@ export const ValuesSection: React.FC = () => {
           <AutoComplete
             options={itemTypeOptions}
             placeholder="Choose an item"
-            value={itemType || undefined}
+            value={itemTypeOptions.find(
+              (option) => option.value === itemType?.value
+            )}
             emptyMessage="No results."
-            onValueChange={setItemType}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, itemType: newValue.value })
+            }
           />
         </div>
 
@@ -119,8 +158,10 @@ export const ValuesSection: React.FC = () => {
             id="franchisee-system-name"
             type="text"
             placeholder="Enter text"
-            value={franchiseeSystemName}
-            onChange={(e) => setFranchiseeSystemName(e.target.value)}
+            value={value?.franchiseeSystemName}
+            onChange={(e) =>
+              onChange?.({ ...value, franchiseeSystemName: e.target.value })
+            }
           />
         </div>
 
@@ -135,8 +176,10 @@ export const ValuesSection: React.FC = () => {
             id="nutrition-system-item-id"
             type="text"
             placeholder="Enter text"
-            value={nutritionSystemItemID}
-            onChange={(e) => setNutritionSystemItemID(e.target.value)}
+            value={value?.nutritionSystemItemID}
+            onChange={(e) =>
+              onChange?.({ ...value, nutritionSystemItemID: e.target.value })
+            }
           />
         </div>
 
@@ -150,9 +193,13 @@ export const ValuesSection: React.FC = () => {
           <AutoComplete
             options={privateBrandOptions}
             placeholder="Choose an item"
-            value={privateBrand || undefined}
+            value={privateBrandOptions.find(
+              (option) => option.value === privateBrand?.value
+            )}
             emptyMessage="No results."
-            onValueChange={setPrivateBrand}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, privateBrand: newValue.value })
+            }
           />
         </div>
 
@@ -164,8 +211,8 @@ export const ValuesSection: React.FC = () => {
             id="ipq"
             type="text"
             placeholder="Enter text"
-            value={ipq}
-            onChange={(e) => setIpq(e.target.value)}
+            value={value?.ipq}
+            onChange={(e) => onChange?.({ ...value, ipq: e.target.value })}
           />
         </div>
       </div>

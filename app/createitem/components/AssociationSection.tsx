@@ -10,19 +10,31 @@ const associationOptions = [
   { value: "display-setup", label: "Display setup" },
 ];
 
-export const AssociationSection: React.FC = () => {
+interface AssociationSectionProps {
+  value?: string[];
+  onChange?: (value: string[]) => void;
+}
+
+export const AssociationSection: React.FC<AssociationSectionProps> = ({
+  value,
+  onChange,
+}) => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const [inputValue, setInputValue] = useState<string>("");
 
   const handleApply = () => {
     if (selectedOption && inputValue) {
-      console.log(`Applied: ${selectedOption.label} - ${inputValue}`);
+      const newAssociation = `${selectedOption.value}-${inputValue}`;
+      const updatedAssociations = [...(value || []), newAssociation];
+      setSelectedOption(null);
+      setInputValue("");
+      onChange?.(updatedAssociations);
     }
   };
 
   return (
     <div className="bg-[#f5f5f5] p-6 w-full">
-      <h2 className="text-2xl font-medium text-black mb-6">Association</h2>
+      <h2 className="text-xl font-medium text-black mb-6">Association</h2>
 
       <div className="flex items-center gap-4">
         <div className="flex gap-3 items-center">

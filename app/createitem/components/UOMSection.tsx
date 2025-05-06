@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { AutoComplete, type Option } from "./Autocomplete";
 import { Input } from "@/components/ui/input";
+import { on } from "events";
 
 const uomOptions = [
   { value: "days", label: "Days" },
@@ -11,7 +12,22 @@ const uomOptions = [
   { value: "years", label: "Years" },
 ];
 
-export const UOMSection: React.FC = () => {
+interface UOMSectionProps {
+  value?: {
+    preShelfLifeUOM?: string;
+    preShelfLife?: string;
+    shelfLifeUOM?: string;
+    shelfLife?: string;
+  };
+  onChange?: (value: {
+    preShelfLifeUOM?: string;
+    preShelfLife?: string;
+    shelfLifeUOM?: string;
+    shelfLife?: string;
+  }) => void;
+}
+
+export const UOMSection: React.FC<UOMSectionProps> = ({ value, onChange }) => {
   const [preShelfLifeUOM, setPreShelfLifeUOM] = useState<Option | null>(null);
   const [preShelfLife, setPreShelfLife] = useState<string>("");
   const [shelfLifeUOM, setShelfLifeUOM] = useState<Option | null>(null);
@@ -19,7 +35,7 @@ export const UOMSection: React.FC = () => {
 
   return (
     <div className="bg-[#f5f5f5] p-6 w-full">
-      <h2 className="text-2xl font-medium text-black mb-6">UOM</h2>
+      <h2 className="text-xl font-medium text-black mb-6">UOM</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col gap-2">
@@ -32,9 +48,13 @@ export const UOMSection: React.FC = () => {
           <AutoComplete
             options={uomOptions}
             placeholder="Choose an item"
-            value={preShelfLifeUOM || undefined}
+            value={uomOptions.find(
+              (option) => option.value === value?.preShelfLifeUOM
+            )}
             emptyMessage="No results."
-            onValueChange={setPreShelfLifeUOM}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, preShelfLifeUOM: newValue.value })
+            }
           />
         </div>
 
@@ -49,8 +69,10 @@ export const UOMSection: React.FC = () => {
             id="pre-shelf-life"
             type="text"
             placeholder="Enter text"
-            value={preShelfLife}
-            onChange={(e) => setPreShelfLife(e.target.value)}
+            value={value?.preShelfLife}
+            onChange={(e) =>
+              onChange?.({ ...value, preShelfLife: e.target.value })
+            }
           />
         </div>
 
@@ -64,9 +86,13 @@ export const UOMSection: React.FC = () => {
           <AutoComplete
             options={uomOptions}
             placeholder="Choose an item"
-            value={shelfLifeUOM || undefined}
+            value={uomOptions.find(
+              (option) => option.value === value?.shelfLifeUOM
+            )}
             emptyMessage="No results."
-            onValueChange={setShelfLifeUOM}
+            onValueChange={(newValue) =>
+              onChange?.({ ...value, shelfLifeUOM: newValue.value })
+            }
           />
         </div>
 
@@ -81,8 +107,10 @@ export const UOMSection: React.FC = () => {
             id="shelf-life"
             type="text"
             placeholder="Enter text"
-            value={shelfLife}
-            onChange={(e) => setShelfLife(e.target.value)}
+            value={value?.shelfLife}
+            onChange={(e) =>
+              onChange?.({ ...value, shelfLife: e.target.value })
+            }
           />
         </div>
       </div>

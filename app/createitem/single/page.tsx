@@ -1,9 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { TopBar, Breadcrumb } from "@/app/createitem/components/TopBar";
-import { CreateItemTabs } from "@/app/createitem/components/Tabs";
-import { TabsContent } from "@/components/ui/tabs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ShortcutsList } from "../components/ShortcutsList";
+
 import { StartDateSection } from "@/app/createitem/components/StartDateSection";
 import { HierarchySection } from "@/app/createitem/components/HierarchySection";
 import { SizeSection } from "@/app/createitem/components/SizeSection";
@@ -13,14 +18,13 @@ import { UOMSection } from "@/app/createitem/components/UOMSection";
 import { VolumeSection } from "@/app/createitem/components/VolumeSection";
 import { AssociationSection } from "@/app/createitem/components/AssociationSection";
 import { ValuesSection } from "@/app/createitem/components/ValuesSection";
-import { AlcoholSection } from "./components/AlcoholSection";
+import { AlcoholSection } from "../components/AlcoholSection";
 import { DetailsComponent } from "@/app/createitem/components/DetailsComponent";
-import { Tag } from "lucide-react";
-import { TagsSection } from "./components/TagsSection";
+import { TagsSection } from "../components/TagsSection";
 
 const tabs = ["details", "values", "tags"];
 
-export default function CreateItemPage() {
+export default function SingleCreateItemPage() {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [formData, setFormData] = useState({
     startDate: "",
@@ -76,6 +80,42 @@ export default function CreateItemPage() {
       tags: [],
     },
   });
+  const [openItems, setOpenItems] = useState<string[]>([]); // Track open accordion items
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      console.log("key pressed: ", event.key);
+      if (event.altKey) {
+        console.log("Alt key detected");
+        switch (event.code) {
+          case "Digit1":
+            toggleAccordionItem("item-1");
+            break;
+          case "Digit2":
+            toggleAccordionItem("item-2");
+
+            break;
+          case "Digit3":
+            toggleAccordionItem("item-3");
+            break;
+          default:
+            break;
+        }
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  // Toggle accordion item
+  const toggleAccordionItem = (item: string) => {
+    console.log("Toggling item:", item);
+    setOpenItems((prev) =>
+      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+    );
+  };
 
   const updateFormData = (field: string, value: any) => {
     setFormData((prev) => {
@@ -93,82 +133,48 @@ export default function CreateItemPage() {
     });
   };
 
-  useEffect(() => {
-    console.log("useEffect is running");
-    const handleKeyDown = (event: KeyboardEvent) => {
-      console.log("Key pressed:", event.code);
-      if (event.altKey) {
-        console.log("Alt key detected");
-        switch (event.code) {
-          case "Digit1":
-            setActiveTab("details");
-            console.log("Switched to tab: Details");
-            break;
-          case "Digit2":
-            setActiveTab("values");
-            console.log("Switched to tab: Values");
-            break;
-          case "Digit3":
-            setActiveTab("tags");
-            console.log("Switched to tab: Tags");
-            break;
-          default:
-            break;
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
-
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div id="main-content" className="flex flex-col lg:flex-row gap-6 p-6">
-        <div className="flex-1">
-          <CreateItemTabs
-            items={[
-              { label: "Details", value: "details" },
-              { label: "Values", value: "values" },
-              { label: "Tags", value: "tags" },
-            ]}
-            defaultValue="details"
-            activeTab={activeTab}
-            onValueChange={setActiveTab}
-          >
-            <TabsContent
-              value="details"
-              id="details-tab"
-              tabIndex={0}
-              className="p-0 flex flex-col gap-6 pt-6"
-            >
-              <StartDateSection
-                value={{
-                  startDate: formData.startDate,
-                  productDescription: formData.productDescription,
-                  receiptDescription: formData.receiptDescription,
-                }}
-                onChange={(value) => updateFormData("startDateSection", value)}
-              />
-              <HierarchySection
-                value={{
-                  psa: formData.hierarchy.psa || "",
-                  category: formData.hierarchy.category || "",
-                  subCategory: formData.hierarchy.subCategory || "",
-                  vClass: formData.hierarchy.vClass || "",
-                }}
-                onChange={(value) => updateFormData("hierarchy", value)}
-              />
-            </TabsContent>
-
-            <TabsContent
-              value="values"
-              id="values-tab"
-              tabIndex={0}
-              className="p-0 flex flex-col gap-6 pt-6"
-            >
+        <Accordion
+          type="multiple"
+          className="grow"
+          value={openItems}
+          onValueChange={setOpenItems}
+        >
+          <AccordionItem value="item-1">
+            <AccordionTrigger>
+              <h2 className="text-xl">Details</h2>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="flex flex-col gap-6">
+                <StartDateSection
+                  value={{
+                    startDate: formData.startDate,
+                    productDescription: formData.productDescription,
+                    receiptDescription: formData.receiptDescription,
+                  }}
+                  onChange={(value) =>
+                    updateFormData("startDateSection", value)
+                  }
+                />
+                <HierarchySection
+                  value={{
+                    psa: formData.hierarchy.psa || "",
+                    category: formData.hierarchy.category || "",
+                    subCategory: formData.hierarchy.subCategory || "",
+                    vClass: formData.hierarchy.vClass || "",
+                  }}
+                  onChange={(value) => updateFormData("hierarchy", value)}
+                />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-2">
+            <AccordionTrigger>
+              <h2 className="text-xl">Values</h2>
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-6">
               <div className="flex gap-6">
                 <SizeSection
                   value={{
@@ -247,14 +253,13 @@ export default function CreateItemPage() {
                   onChange={(value) => updateFormData("values", value)}
                 />
               </div>
-            </TabsContent>
-
-            <TabsContent
-              value="tags"
-              id="tags-tab"
-              tabIndex={0}
-              className="p-0 flex flex-col gap-6 pt-6"
-            >
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="item-3">
+            <AccordionTrigger>
+              <h2 className="text-xl">Tags</h2>
+            </AccordionTrigger>
+            <AccordionContent>
               <div className="flex flex-col gap-6">
                 <TagsSection
                   value={{
@@ -264,9 +269,9 @@ export default function CreateItemPage() {
                   onChange={(value) => updateFormData("tags", value)}
                 />
               </div>
-            </TabsContent>
-          </CreateItemTabs>
-        </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <div className="w-full lg:w-[560px]">
           <DetailsComponent formData={formData} />
