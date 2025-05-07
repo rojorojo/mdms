@@ -1,7 +1,19 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { KeyboardKey } from "@/app/createitem/components/KeyboardKey";
 
 export const ShortcutsList: React.FC = () => {
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    // Detect if user is on a Mac
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    setIsMac(userAgent.indexOf("mac") !== -1);
+  }, []);
+
+  const modifierKey = isMac ? "Option" : "Alt";
+
   return (
     <div className="flex flex-col w-[460px] gap-2">
       <div className="flex items-center justify-between border-b border-neutral-300/30 py-2">
@@ -9,7 +21,7 @@ export const ShortcutsList: React.FC = () => {
           Switch to Details
         </span>
         <span className="flex gap-2">
-          <KeyboardKey keyName="Alt/Option" />
+          <KeyboardKey keyName={modifierKey} />
           <KeyboardKey keyName="1" />
         </span>
       </div>
@@ -18,7 +30,7 @@ export const ShortcutsList: React.FC = () => {
           Switch to Values
         </span>
         <span className="flex gap-2">
-          <KeyboardKey keyName="Alt/Option" />
+          <KeyboardKey keyName={modifierKey} />
           <KeyboardKey keyName="2" />
         </span>
       </div>
@@ -27,7 +39,7 @@ export const ShortcutsList: React.FC = () => {
           Switch to Tags
         </span>
         <span className="flex gap-2">
-          <KeyboardKey keyName="Alt/Option" />
+          <KeyboardKey keyName={modifierKey} />
           <KeyboardKey keyName="3" />
         </span>
       </div>
