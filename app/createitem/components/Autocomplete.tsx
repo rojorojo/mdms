@@ -21,6 +21,7 @@ import { Check } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { ChevronsUpDown } from "lucide-react";
+import { set } from "react-hook-form";
 
 export type Option = Record<"value" | "label", string> & Record<string, string>;
 
@@ -50,13 +51,6 @@ export const AutoComplete = ({
   const [inputValue, setInputValue] = useState<string>(value?.label || "");
   const [isFocused, setIsFocused] = useState(false);
   const [shouldFilterOptions, setShouldFilterOptions] = useState(false);
-
-  useEffect(() => {
-    if (value) {
-      setSelected(value);
-      setInputValue(value.label || "");
-    }
-  }, [value]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -96,9 +90,6 @@ export const AutoComplete = ({
   const handleFocus = useCallback(() => {
     setOpen(true);
     setShouldFilterOptions(false); // Show all options when focused
-    if (selected?.label) {
-      setInputValue(selected.label);
-    }
   }, [selected]);
 
   const handleSelectOption = useCallback(
@@ -107,14 +98,6 @@ export const AutoComplete = ({
 
       setSelected(selectedOption);
       onValueChange?.(selectedOption);
-
-      // This is a hack to prevent the input from being focused after the user selects an option
-      // We can call this hack: "The next tick"
-      {
-        /*setTimeout(() => {
-        inputRef?.current?.blur();
-      }, 0);*/
-      }
     },
     [onValueChange]
   );
@@ -125,17 +108,13 @@ export const AutoComplete = ({
     setShouldFilterOptions(true); // Only filter when user is typing
   };
 
-  // In the render section, determine which options to display
-  // Use either all options or filtered options based on shouldFilterOptions
-  const displayOptions =
-    shouldFilterOptions && inputValue !== ""
-      ? options.filter((option) =>
-          option.label.toLowerCase().includes(inputValue.toLowerCase())
-        )
-      : options;
+  const displayOptions = options;
 
   return (
-    <CommandPrimitive onKeyDown={handleKeyDown}>
+    <CommandPrimitive
+      onKeyDown={handleKeyDown}
+      shouldFilter={shouldFilterOptions}
+    >
       <div className="border border-black bg-white flex gap-2 items-center pr-2 h-9 focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px]">
         <CommandPrimitive.Input
           asChild
@@ -153,7 +132,19 @@ export const AutoComplete = ({
             className="border-none h-7 rounded-none focus-visible:border-none focus-visible:ring-0"
           />
         </CommandPrimitive.Input>
-        <ChevronsUpDown />
+        <ChevronsUpDown
+          onMouseDown={(event) => {
+            event.preventDefault();
+            setShouldFilterOptions(false);
+            setInputValue((inputValue) => inputValue);
+            if (!isOpen) {
+              setOpen(true);
+            } else {
+              setOpen(false);
+            }
+          }}
+          className="cursor-pointer"
+        />
       </div>
       <div className="relative mt-1">
         <div
@@ -169,8 +160,7 @@ export const AutoComplete = ({
                   <Skeleton className="h-8 w-full" />
                 </div>
               </CommandPrimitive.Loading>
-            ) : null}
-            {displayOptions.length > 0 && !isLoading ? (
+            ) : displayOptions.length > 0 ? (
               <CommandGroup>
                 {displayOptions.map((option) => {
                   const isSelected = selected?.value === option.value;
@@ -194,12 +184,11 @@ export const AutoComplete = ({
                   );
                 })}
               </CommandGroup>
-            ) : null}
-            {!isLoading ? (
+            ) : (
               <CommandPrimitive.Empty className="select-none rounded-none px-2 py-3 text-center text-sm">
                 {emptyMessage}
               </CommandPrimitive.Empty>
-            ) : null}
+            )}
           </CommandList>
         </div>
       </div>
