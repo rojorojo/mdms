@@ -15,8 +15,8 @@ export const ShortcutsList: React.FC = () => {
   const modifierKey = isMac ? "Option" : "Alt";
 
   return (
-    <div className="flex flex-col w-[460px] gap-2">
-      <div className="flex items-center justify-between border-b border-neutral-300/30 py-2">
+    <div className="flex flex-col w-[460px]">
+      <div className="flex items-center justify-between border-b border-neutral-300/50 pb-4 pt-4">
         <span className="text-sm font-medium text-[#09090B]">
           Switch to Details
         </span>
@@ -25,7 +25,7 @@ export const ShortcutsList: React.FC = () => {
           <KeyboardKey keyName="1" />
         </span>
       </div>
-      <div className="flex items-center justify-between border-b border-neutral-300/30 py-2">
+      <div className="flex items-center justify-between border-b border-neutral-300/50 pb-4 pt-4">
         <span className="text-sm font-medium text-[#09090B]">
           Switch to Values
         </span>
@@ -34,7 +34,7 @@ export const ShortcutsList: React.FC = () => {
           <KeyboardKey keyName="2" />
         </span>
       </div>
-      <div className="flex items-center justify-between border-b border-neutral-300/30 py-2">
+      <div className="flex items-center justify-between border-b border-neutral-300/50 pb-4 pt-4">
         <span className="text-sm font-medium text-[#09090B]">
           Switch to Tags
         </span>

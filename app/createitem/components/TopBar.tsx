@@ -63,7 +63,7 @@ export const TopBar: React.FC<TopBarProps> = ({
                 Shortcuts
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full p-4 rounded-none">
+            <PopoverContent className="w-full p-4 rounded-none shadow-none">
               <div className="flex flex-col gap-4">
                 <h2 className="text-sm font-medium text-[#09090B]">
                   Keyboard shortcuts
