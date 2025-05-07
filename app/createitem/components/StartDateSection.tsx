@@ -1,4 +1,6 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { RefreshCcw } from "lucide-react";
 import React from "react";
 
 interface StartDateSectionProps {
@@ -18,8 +20,25 @@ export const StartDateSection: React.FC<StartDateSectionProps> = ({
   value,
   onChange,
 }) => {
+  const handleReset = () => {
+    onChange?.({
+      startDate: "",
+      productDescription: "",
+      receiptDescription: "",
+    });
+  };
+
   return (
-    <div className="bg-[#F5F5F5] p-6 w-full">
+    <div className="bg-[#F5F5F5] p-6 w-full relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleReset}
+        className="absolute top-4 right-4 h-8 w-8 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200"
+        title="Reset fields"
+      >
+        <RefreshCcw className="h-4 w-4" />
+      </Button>
       <h2 className="text-xl font-medium text-black mb-6">
         Start date & description
       </h2>

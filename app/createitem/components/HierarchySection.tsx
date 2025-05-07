@@ -1,7 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { AutoComplete, type Option } from "./Autocomplete";
+import { Button } from "@/components/ui/button";
+import { RefreshCcw } from "lucide-react";
 
 const psaOptions = [
   { value: "psa-1", label: "PSA 1" },
@@ -46,8 +48,29 @@ export const HierarchySection: React.FC<HierarchySectionProps> = ({
   value,
   onChange,
 }) => {
+  const [resetCounter, setResetCounter] = React.useState(0);
+
+  const handleReset = () => {
+    onChange?.({
+      psa: "",
+      category: "",
+      subCategory: "",
+      vClass: "",
+    });
+    setResetCounter((prev) => prev + 1);
+  };
+
   return (
-    <div className="bg-[#f5f5f5] p-6 w-full">
+    <div className="bg-[#f5f5f5] p-6 w-full relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleReset}
+        className="absolute top-4 right-4 h-8 w-8 text-neutral-500 hover:text-neutral-900 hover:bg-neutral-200"
+        title="Reset fields"
+      >
+        <RefreshCcw className="h-4 w-4" />
+      </Button>
       <h2 className="text-xl font-medium text-black mb-6">Hierarchy</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -56,9 +79,14 @@ export const HierarchySection: React.FC<HierarchySectionProps> = ({
             PSA <span className="text-red-600">*</span>
           </label>
           <AutoComplete
+            key={`psa-${resetCounter}`}
             options={psaOptions}
             placeholder="Choose an item"
-            value={psaOptions.find((option) => option.value === value?.psa)}
+            value={
+              value?.psa
+                ? psaOptions.find((option) => option.value === value?.psa)
+                : undefined
+            }
             emptyMessage="No results."
             onValueChange={(newValue) =>
               onChange?.({ ...value, psa: newValue.value })
@@ -74,6 +102,7 @@ export const HierarchySection: React.FC<HierarchySectionProps> = ({
             Category <span className="text-red-600">*</span>
           </label>
           <AutoComplete
+            key={`category-${resetCounter}`}
             options={categoryOptions}
             placeholder="Choose an item"
             value={categoryOptions.find(
@@ -94,6 +123,7 @@ export const HierarchySection: React.FC<HierarchySectionProps> = ({
             Sub category <span className="text-red-600">*</span>
           </label>
           <AutoComplete
+            key={`sub-category-${resetCounter}`}
             options={subCategoryOptions}
             placeholder="Choose an item"
             value={subCategoryOptions.find(
@@ -114,6 +144,7 @@ export const HierarchySection: React.FC<HierarchySectionProps> = ({
             V Class <span className="text-red-600">*</span>
           </label>
           <AutoComplete
+            key={`v-class-${resetCounter}`}
             options={vClassOptions}
             placeholder="Choose an item"
             value={vClassOptions.find(
