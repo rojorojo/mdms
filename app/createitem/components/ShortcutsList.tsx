@@ -43,6 +43,15 @@ export const ShortcutsList: React.FC = () => {
           <KeyboardKey keyName="3" />
         </span>
       </div>
+      <div className="flex items-center justify-between border-b border-neutral-300/50 pb-4 pt-4">
+        <span className="text-sm font-medium text-[#09090B]">
+          Save and create item
+        </span>
+        <span className="flex gap-2">
+          <KeyboardKey keyName={modifierKey} />
+          <KeyboardKey keyName="S" />
+        </span>
+      </div>
     </div>
   );
 };

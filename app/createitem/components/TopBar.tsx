@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import {
@@ -7,8 +9,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { KeyboardKey } from "@/app/createitem/components/KeyboardKey";
 import { ShortcutsList } from "@/app/createitem/components/ShortcutsList";
+import { Toaster } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 export interface Breadcrumb {
   title: string;
@@ -26,6 +29,46 @@ export const TopBar: React.FC<TopBarProps> = ({
   title,
   children,
 }) => {
+  //const { toast } = useToast();
+  const [isMac, setIsMac] = React.useState(false);
+
+  useEffect(() => {
+    // Detect if user is on a Mac
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    setIsMac(userAgent.indexOf("mac") !== -1);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check for Alt+S or Option+S (for Mac)
+      if (
+        (event.altKey || event.metaKey) &&
+        (event.code === "KeyS" || event.key === "s")
+      ) {
+        event.preventDefault();
+        handleSave();
+      } else {
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  const handleSave = () => {
+    toast("Item saved", {
+      description: "Your item has been saved successfully.",
+      duration: Infinity,
+      action: {
+        label: "Dismiss",
+        onClick: () => console.log("Dismissed"),
+      },
+      className: "border-black",
+    });
+  };
+
+  const modifierKey = isMac ? "Option" : "Alt";
+
   return (
     <div className="flex flex-col">
       {/* MDMS Header */}
@@ -76,6 +119,7 @@ export const TopBar: React.FC<TopBarProps> = ({
           <Button variant="default">Create item</Button>
         </div>
       </div>
+      <Toaster position="bottom-center" richColors />
     </div>
   );
 };

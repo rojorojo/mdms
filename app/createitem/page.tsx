@@ -94,23 +94,20 @@ export default function CreateItemPage() {
   };
 
   useEffect(() => {
-    console.log("useEffect is running");
     const handleKeyDown = (event: KeyboardEvent) => {
-      console.log("Key pressed:", event.code);
       if (event.altKey) {
-        console.log("Alt key detected");
         switch (event.code) {
           case "Digit1":
             setActiveTab("details");
-            console.log("Switched to tab: Details");
+
             break;
           case "Digit2":
             setActiveTab("values");
-            console.log("Switched to tab: Values");
+
             break;
           case "Digit3":
             setActiveTab("tags");
-            console.log("Switched to tab: Tags");
+
             break;
           default:
             break;
@@ -136,8 +133,14 @@ export default function CreateItemPage() {
             ]}
             defaultValue="details"
             activeTab={activeTab}
-            onValueChange={setActiveTab}>
-            <TabsContent value="details" id="details-tab" tabIndex={0} className="p-0 flex flex-col gap-6 pt-6">
+            onValueChange={setActiveTab}
+          >
+            <TabsContent
+              value="details"
+              id="details-tab"
+              tabIndex={0}
+              className="p-0 flex flex-col gap-6 pt-6"
+            >
               <StartDateSection
                 value={{
                   startDate: formData.startDate,
@@ -157,7 +160,12 @@ export default function CreateItemPage() {
               />
             </TabsContent>
 
-            <TabsContent value="values" id="values-tab" tabIndex={0} className="p-0 flex flex-col gap-6 pt-6">
+            <TabsContent
+              value="values"
+              id="values-tab"
+              tabIndex={0}
+              className="p-0 flex flex-col gap-6 pt-6"
+            >
               <div className="flex gap-6">
                 <SizeSection
                   value={{
@@ -178,8 +186,16 @@ export default function CreateItemPage() {
                 />
               </div>
               <div className="flex flex-col gap-6">
-                <UPCSection value={formData.upc} onChange={(newUPC) => updateFormData("upc", newUPC)} />
-                <AssociationSection value={formData.association} onChange={(newAssociation) => updateFormData("association", newAssociation)} />
+                <UPCSection
+                  value={formData.upc}
+                  onChange={(newUPC) => updateFormData("upc", newUPC)}
+                />
+                <AssociationSection
+                  value={formData.association}
+                  onChange={(newAssociation) =>
+                    updateFormData("association", newAssociation)
+                  }
+                />
               </div>
               <div className="flex gap-6">
                 <UOMSection
@@ -214,11 +230,14 @@ export default function CreateItemPage() {
                 <ValuesSection
                   value={{
                     manufacturerCode: formData.values.manufacturerCode || "",
-                    manufacturerCaseQuantity: formData.values.manufacturerCaseQty || "",
+                    manufacturerCaseQuantity:
+                      formData.values.manufacturerCaseQty || "",
                     licenseSystemItemID: formData.values.licenseSystemId || "",
                     itemType: formData.values.itemType || "",
-                    franchiseeSystemName: formData.values.franchiseeSystemName || "",
-                    nutritionSystemItemID: formData.values.nutritionSystemItemId || "",
+                    franchiseeSystemName:
+                      formData.values.franchiseeSystemName || "",
+                    nutritionSystemItemID:
+                      formData.values.nutritionSystemItemId || "",
                     privateBrand: formData.values.privateBrand || "",
                     ipq: formData.values.ipq || "",
                   }}
@@ -227,7 +246,12 @@ export default function CreateItemPage() {
               </div>
             </TabsContent>
 
-            <TabsContent value="tags" id="tags-tab" tabIndex={0} className="p-0 flex flex-col gap-6 pt-6">
+            <TabsContent
+              value="tags"
+              id="tags-tab"
+              tabIndex={0}
+              className="p-0 flex flex-col gap-6 pt-6"
+            >
               <div className="flex flex-col gap-6">
                 <TagsSection
                   value={{
