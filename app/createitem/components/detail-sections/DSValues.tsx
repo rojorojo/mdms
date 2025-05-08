@@ -7,11 +7,10 @@ interface DSValuesProps {
       itemType?: string;
       privateBrand?: string;
       manufacturerCaseQuantity?: string;
-      licenseSystemItemID?: string;
+      licenseSystemItemId?: string;
       franchiseeSystemName?: string;
-      nutritionSystemItemID?: string;
+      nutritionSystemItemId?: string;
       ipq?: string;
-      sizeHeight?: string;
     };
   };
 }
@@ -40,7 +39,7 @@ export const DSValues: React.FC<DSValuesProps> = ({ formData }) => {
           License system item ID
         </span>
         <span className="text-sm text-neutral-800 break-words">
-          {formData.values.licenseSystemItemID || "---"}
+          {formData.values.licenseSystemItemId || "---"}
         </span>
       </div>
       <div className="flex flex-col gap-1.5">
@@ -64,7 +63,7 @@ export const DSValues: React.FC<DSValuesProps> = ({ formData }) => {
           Nutrition system item ID
         </span>
         <span className="text-sm text-neutral-800 break-words">
-          {formData.values.nutritionSystemItemID || "---"}
+          {formData.values.nutritionSystemItemId || "---"}
         </span>
       </div>
       <div className="flex flex-col gap-1.5">

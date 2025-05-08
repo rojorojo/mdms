@@ -34,9 +34,9 @@ interface ValuesSectionProps {
     itemType?: string;
     privateBrand?: string;
     manufacturerCaseQuantity?: string;
-    licenseSystemItemID?: string;
+    licenseSystemItemId?: string;
     franchiseeSystemName?: string;
-    nutritionSystemItemID?: string;
+    nutritionSystemItemId?: string;
     ipq?: string;
   };
   onChange?: (value: {
@@ -44,9 +44,9 @@ interface ValuesSectionProps {
     itemType?: string;
     privateBrand?: string;
     manufacturerCaseQuantity?: string;
-    licenseSystemItemID?: string;
+    licenseSystemItemId?: string;
     franchiseeSystemName?: string;
-    nutritionSystemItemID?: string;
+    nutritionSystemItemId?: string;
     ipq?: string;
   }) => void;
 }
@@ -55,16 +55,19 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
   value,
   onChange,
 }) => {
-  const [manufacturerCode, setManufacturerCode] = useState<Option | null>(null);
-  const [itemType, setItemType] = useState<Option | null>(null);
-  const [privateBrand, setPrivateBrand] = useState<Option | null>(null);
-  const [manufacturerCaseQuantity, setManufacturerCaseQuantity] =
-    useState<string>("");
-  const [licenseSystemItemID, setLicenseSystemItemID] = useState<string>("");
-  const [franchiseeSystemName, setFranchiseeSystemName] = useState<string>("");
-  const [nutritionSystemItemID, setNutritionSystemItemID] =
-    useState<string>("");
-  const [ipq, setIpq] = useState<string>("");
+  const handleInputChange = (fieldName: string, fieldValue: string) => {
+    console.log("Field name:", fieldName);
+    if (onChange) {
+      // Create a new object with all existing values plus the updated field
+      const updatedValues = {
+        ...value,
+        [fieldName]: fieldValue,
+      };
+
+      // Call the parent onChange handler with the updated values
+      onChange(updatedValues);
+    }
+  };
 
   return (
     <div className="bg-[#f5f5f5] p-6 w-full">
@@ -81,9 +84,13 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
           <AutoComplete
             options={manufacturerCodeOptions}
             placeholder="Choose an item"
-            value={manufacturerCodeOptions.find(
-              (option) => option.value === manufacturerCode?.value
-            )}
+            value={
+              value?.manufacturerCode
+                ? manufacturerCodeOptions.find(
+                    (option) => option.value === value?.manufacturerCode
+                  )
+                : undefined
+            }
             emptyMessage="No results."
             onValueChange={(newValue) =>
               onChange?.({ ...value, manufacturerCode: newValue.value })
@@ -102,7 +109,7 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
             id="manufacturer-case-quantity"
             type="text"
             placeholder="Enter text"
-            value={value?.manufacturerCaseQuantity}
+            value={value?.manufacturerCaseQuantity || ""}
             onChange={(e) =>
               onChange?.({ ...value, manufacturerCaseQuantity: e.target.value })
             }
@@ -120,9 +127,9 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
             id="license-system-item-id"
             type="text"
             placeholder="Enter text"
-            value={value?.licenseSystemItemID}
+            value={value?.licenseSystemItemId || ""}
             onChange={(e) =>
-              onChange?.({ ...value, licenseSystemItemID: e.target.value })
+              onChange?.({ ...value, licenseSystemItemId: e.target.value })
             }
           />
         </div>
@@ -137,9 +144,13 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
           <AutoComplete
             options={itemTypeOptions}
             placeholder="Choose an item"
-            value={itemTypeOptions.find(
-              (option) => option.value === itemType?.value
-            )}
+            value={
+              value?.itemType
+                ? itemTypeOptions.find(
+                    (option) => option.value === value?.itemType
+                  )
+                : undefined
+            }
             emptyMessage="No results."
             onValueChange={(newValue) =>
               onChange?.({ ...value, itemType: newValue.value })
@@ -158,7 +169,7 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
             id="franchisee-system-name"
             type="text"
             placeholder="Enter text"
-            value={value?.franchiseeSystemName}
+            value={value?.franchiseeSystemName || ""}
             onChange={(e) =>
               onChange?.({ ...value, franchiseeSystemName: e.target.value })
             }
@@ -176,9 +187,9 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
             id="nutrition-system-item-id"
             type="text"
             placeholder="Enter text"
-            value={value?.nutritionSystemItemID}
+            value={value?.nutritionSystemItemId || ""}
             onChange={(e) =>
-              onChange?.({ ...value, nutritionSystemItemID: e.target.value })
+              onChange?.({ ...value, nutritionSystemItemId: e.target.value })
             }
           />
         </div>
@@ -193,9 +204,13 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
           <AutoComplete
             options={privateBrandOptions}
             placeholder="Choose an item"
-            value={privateBrandOptions.find(
-              (option) => option.value === privateBrand?.value
-            )}
+            value={
+              value?.privateBrand
+                ? privateBrandOptions.find(
+                    (option) => option.value === value?.privateBrand
+                  )
+                : undefined
+            }
             emptyMessage="No results."
             onValueChange={(newValue) =>
               onChange?.({ ...value, privateBrand: newValue.value })
@@ -211,7 +226,7 @@ export const ValuesSection: React.FC<ValuesSectionProps> = ({
             id="ipq"
             type="text"
             placeholder="Enter text"
-            value={value?.ipq}
+            value={value?.ipq || ""}
             onChange={(e) => onChange?.({ ...value, ipq: e.target.value })}
           />
         </div>

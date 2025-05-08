@@ -52,8 +52,8 @@ interface DetailsComponentProps {
     };
     values: {
       manufacturerCode: string;
-      manufacturerCaseQty: string;
-      licenseSystemId: string;
+      manufacturerCaseQuantity: string;
+      licenseSystemItemId: string;
       itemType: string;
       franchiseeSystemName: string;
       nutritionSystemItemId: string;

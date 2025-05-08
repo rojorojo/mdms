@@ -63,8 +63,8 @@ export default function CreateItemPage() {
     },
     values: {
       manufacturerCode: "",
-      manufacturerCaseQty: "",
-      licenseSystemId: "",
+      manufacturerCaseQuantity: "",
+      licenseSystemItemId: "", // ✓ Update to match component naming
       itemType: "",
       franchiseeSystemName: "",
       nutritionSystemItemId: "",
@@ -231,13 +231,14 @@ export default function CreateItemPage() {
                   value={{
                     manufacturerCode: formData.values.manufacturerCode || "",
                     manufacturerCaseQuantity:
-                      formData.values.manufacturerCaseQty || "",
-                    licenseSystemItemID: formData.values.licenseSystemId || "",
+                      formData.values.manufacturerCaseQuantity || "", // ✓ Fix name
+                    licenseSystemItemId:
+                      formData.values.licenseSystemItemId || "", // ✓ Fix name
                     itemType: formData.values.itemType || "",
                     franchiseeSystemName:
                       formData.values.franchiseeSystemName || "",
-                    nutritionSystemItemID:
-                      formData.values.nutritionSystemItemId || "",
+                    nutritionSystemItemId:
+                      formData.values.nutritionSystemItemId || "", // ✓ Fix case
                     privateBrand: formData.values.privateBrand || "",
                     ipq: formData.values.ipq || "",
                   }}
