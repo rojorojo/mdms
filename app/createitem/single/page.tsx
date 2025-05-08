@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { ShortcutsList } from "../components/ShortcutsList";
 
 import { StartDateSection } from "@/app/createitem/components/StartDateSection";
@@ -62,8 +67,8 @@ export default function SingleCreateItemPage() {
     },
     values: {
       manufacturerCode: "",
-      manufacturerCaseQty: "",
-      licenseSystemId: "",
+      manufacturerCaseQuantity: "",
+      licenseSystemItemId: "",
       itemType: "",
       franchiseeSystemName: "",
       nutritionSystemItemId: "",
@@ -107,7 +112,9 @@ export default function SingleCreateItemPage() {
   // Toggle accordion item
   const toggleAccordionItem = (item: string) => {
     console.log("Toggling item:", item);
-    setOpenItems((prev) => (prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]));
+    setOpenItems((prev) =>
+      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
+    );
   };
 
   const updateFormData = (field: string, value: any) => {
@@ -129,7 +136,12 @@ export default function SingleCreateItemPage() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div id="main-content" className="flex flex-col lg:flex-row gap-6 p-6">
-        <Accordion type="multiple" className="grow" value={openItems} onValueChange={setOpenItems}>
+        <Accordion
+          type="multiple"
+          className="grow"
+          value={openItems}
+          onValueChange={setOpenItems}
+        >
           <AccordionItem value="item-1">
             <AccordionTrigger>
               <h2 className="text-xl">Details</h2>
@@ -142,7 +154,9 @@ export default function SingleCreateItemPage() {
                     productDescription: formData.productDescription,
                     receiptDescription: formData.receiptDescription,
                   }}
-                  onChange={(value) => updateFormData("startDateSection", value)}
+                  onChange={(value) =>
+                    updateFormData("startDateSection", value)
+                  }
                 />
                 <HierarchySection
                   value={{
@@ -181,8 +195,16 @@ export default function SingleCreateItemPage() {
                 />
               </div>
               <div className="flex flex-col gap-6">
-                <UPCSection value={formData.upc} onChange={(newUPC) => updateFormData("upc", newUPC)} />
-                <AssociationSection value={formData.association} onChange={(newAssociation) => updateFormData("association", newAssociation)} />
+                <UPCSection
+                  value={formData.upc}
+                  onChange={(newUPC) => updateFormData("upc", newUPC)}
+                />
+                <AssociationSection
+                  value={formData.association}
+                  onChange={(newAssociation) =>
+                    updateFormData("association", newAssociation)
+                  }
+                />
               </div>
               <div className="flex gap-6">
                 <UOMSection
@@ -217,11 +239,15 @@ export default function SingleCreateItemPage() {
                 <ValuesSection
                   value={{
                     manufacturerCode: formData.values.manufacturerCode || "",
-                    manufacturerCaseQuantity: formData.values.manufacturerCaseQty || "",
-                    licenseSystemItemID: formData.values.licenseSystemId || "",
+                    manufacturerCaseQuantity:
+                      formData.values.manufacturerCaseQuantity || "",
+                    licenseSystemItemId:
+                      formData.values.licenseSystemItemId || "",
                     itemType: formData.values.itemType || "",
-                    franchiseeSystemName: formData.values.franchiseeSystemName || "",
-                    nutritionSystemItemID: formData.values.nutritionSystemItemId || "",
+                    franchiseeSystemName:
+                      formData.values.franchiseeSystemName || "",
+                    nutritionSystemItemId:
+                      formData.values.nutritionSystemItemId || "",
                     privateBrand: formData.values.privateBrand || "",
                     ipq: formData.values.ipq || "",
                   }}
